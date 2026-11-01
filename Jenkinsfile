@@ -23,12 +23,7 @@ pipeline {
             }
         }
 
-                stage('Docker Build') {
-            steps {
-                echo 'Building FinSecure Pay Docker image'
-                bat 'docker build -t finsecure-pay:1.0 .'
-            }
-        }
+               
     }
 
     post {
