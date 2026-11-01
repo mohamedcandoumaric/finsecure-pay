@@ -22,6 +22,25 @@ pipeline {
     }
 }
 
+stage('Dependency Security Scan') {
+    steps {
+        echo 'Scanning Maven dependencies for vulnerabilities'
+        bat '''
+            @echo off
+            docker run --rm ^
+              -v "%CD%:/project" ^
+              -v "%USERPROFILE%\\.m2:/root/.m2:ro" ^
+              aquasec/trivy:0.76.1 fs ^
+              --scanners vuln ^
+              --severity HIGH,CRITICAL ^
+              --exit-code 1 ^
+              /project
+
+            if errorlevel 1 exit /b 1
+        '''
+    }
+}
+
         stage('Package') {
             steps {
                 echo 'Packaging Spring Boot application'
