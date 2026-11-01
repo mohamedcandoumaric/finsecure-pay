@@ -29,7 +29,7 @@ stage('Dependency Security Scan') {
             @echo off
             docker run --rm ^
               -v "%CD%:/project" ^
-              -v "%USERPROFILE%\\.m2:/root/.m2:ro" ^
+              -v "C:\\Users\\Mohamed Candou Maric\\.m2:/root/.m2:ro" ^
               aquasec/trivy:0.76.1 fs ^
               --scanners vuln ^
               --severity HIGH,CRITICAL ^
