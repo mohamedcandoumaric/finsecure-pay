@@ -42,7 +42,12 @@ pipeline {
 
 stage('Kubernetes Connectivity Test') {
     steps {
-        bat '"C:\\Program Files\\Docker\\Docker\\resources\\bin\\kubectl.exe" get nodes'
+        withCredentials([file(
+            credentialsId: 'kubeconfig-docker-desktop',
+            variable: 'KUBECONFIG'
+        )]) {
+            bat '"C:\\Program Files\\Docker\\Docker\\resources\\bin\\kubectl.exe" get nodes'
+        }
     }
 }
                
