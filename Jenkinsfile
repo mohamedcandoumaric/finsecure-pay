@@ -15,6 +15,13 @@ pipeline {
             }
         }
 
+        stage('Static Code Analysis') {
+    steps {
+        echo 'Running SpotBugs static code analysis'
+        bat 'mvn com.github.spotbugs:spotbugs-maven-plugin:4.9.8.2:check'
+    }
+}
+
         stage('Package') {
             steps {
                 echo 'Packaging Spring Boot application'
