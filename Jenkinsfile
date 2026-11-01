@@ -39,6 +39,12 @@ pipeline {
         }
     }
 }
+
+stage('Kubernetes Connectivity Test') {
+    steps {
+        bat '"C:\\Program Files\\Docker\\Docker\\resources\\bin\\kubectl.exe" get nodes'
+    }
+}
                
     }
 
