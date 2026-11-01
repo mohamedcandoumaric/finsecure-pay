@@ -16,29 +16,29 @@ pipeline {
             }
         }
 
-                stage('Docker Build') {
-            steps {
-                echo 'Building FinSecure Pay Docker image'
-                bat 'docker build -t finsecure-pay:1.0 .'
-            }
+                stage('Docker Push') {
+    steps {
+        withCredentials([usernamePassword(
+            credentialsId: 'dockerhub-creds',
+            usernameVariable: 'DOCKER_USER',
+            passwordVariable: 'DOCKER_TOKEN'
+        )]) {
+            bat '''
+                @echo off
+                echo %DOCKER_TOKEN%| docker login -u %DOCKER_USER% --password-stdin
+                if errorlevel 1 exit /b 1
+
+                docker tag finsecure-pay:1.0 %DOCKER_USER%/finsecure-pay:1.0
+                if errorlevel 1 exit /b 1
+
+                docker push %DOCKER_USER%/finsecure-pay:1.0
+                if errorlevel 1 exit /b 1
+
+                docker logout
+            '''
         }
-                  stage('Docker Push') {
-            steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'dockerhub-creds',
-                    usernameVariable: 'DOCKER_USER',
-                    passwordVariable: 'DOCKER_TOKEN'
-                )]) {
-                    bat '''
-                        @echo off
-                        echo %DOCKER_TOKEN% | docker login -u %DOCKER_USER% --password-stdin
-                        docker tag finsecure-pay:1.0 %DOCKER_USER%/finsecure-pay:1.0
-                        docker push %DOCKER_USER%/finsecure-pay:1.0
-                        docker logout
-                    '''
-                }
-            }
-        }
+    }
+}
                
     }
 
