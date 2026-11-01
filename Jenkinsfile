@@ -40,13 +40,26 @@ pipeline {
     }
 }
 
-stage('Kubernetes Connectivity Test') {
+stage('Deploy to Kubernetes') {
     steps {
         withCredentials([file(
             credentialsId: 'kubeconfig-docker-desktop',
             variable: 'KUBECONFIG'
         )]) {
-            bat '"C:\\Program Files\\Docker\\Docker\\resources\\bin\\kubectl.exe" get nodes'
+            bat '''
+                @echo off
+                kubectl apply -f k8s/configmap.yaml
+                if errorlevel 1 exit /b 1
+
+                kubectl apply -f k8s/deployment.yaml
+                if errorlevel 1 exit /b 1
+
+                kubectl apply -f k8s/service.yaml
+                if errorlevel 1 exit /b 1
+
+                kubectl rollout status deployment/finsecure-pay --timeout=120s
+                if errorlevel 1 exit /b 1
+            '''
         }
     }
 }
