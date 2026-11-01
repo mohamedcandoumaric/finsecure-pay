@@ -15,6 +15,20 @@ pipeline {
                 bat 'mvn clean package'
             }
         }
+
+                stage('Docker Build') {
+            steps {
+                echo 'Building FinSecure Pay Docker image'
+                bat 'docker build -t finsecure-pay:1.0 .'
+            }
+        }
+
+                stage('Docker Build') {
+            steps {
+                echo 'Building FinSecure Pay Docker image'
+                bat 'docker build -t finsecure-pay:1.0 .'
+            }
+        }
     }
 
     post {
