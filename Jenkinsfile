@@ -33,6 +33,27 @@ pipeline {
             }
         }
 
+        
+stage('Trivy Security Scan') {
+    steps {
+        echo 'Scanning Docker image for HIGH and CRITICAL vulnerabilities'
+        bat '''
+            @echo off
+            docker run --rm ^
+              -v /var/run/docker.sock:/var/run/docker.sock ^
+              aquasec/trivy:0.76.1 image ^
+              --image-src docker ^
+              --scanners vuln ^
+              --severity HIGH,CRITICAL ^
+              --exit-code 1 ^
+              %IMAGE_NAME%:%IMAGE_TAG%
+
+            if errorlevel 1 exit /b 1
+        '''
+    }
+}
+
+
         stage('Docker Push') {
             steps {
                 withCredentials([usernamePassword(
