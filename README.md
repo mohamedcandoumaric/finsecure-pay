@@ -1,0 +1,1 @@
+Jenkins CI/CD pipeline configured with automatic GitHub SCM polling.
